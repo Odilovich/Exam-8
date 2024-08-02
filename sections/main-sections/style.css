@@ -1,0 +1,58 @@
+/* Adjusting size of the previous arrow */
+.ant-carousel .slick-prev {
+  color: #000;
+}
+
+/* Adjusting size of the next arrow */
+.ant-carousel .slick-next {
+  color: #000;
+}
+
+/* Optionally, adjust the arrow icon size */
+.ant-carousel .slick-prev::before,
+.ant-carousel .slick-next::before {
+  font-size: 130px; /* Set the icon size you need */
+}
+.ant-carousel .slick-dots li {
+  background-color: #000;
+  border-radius: 2px;
+}
+.ant-carousel .slick-dots .slick-active button::after {
+  background-color: #000;
+  color: #000;
+  border-radius: 6px;
+}
+
+.item1 {
+  grid-area: left;
+}
+.item2 {
+  grid-area: right;
+}
+.item3 {
+  grid-area: bottom;
+}
+
+.grid-container {
+  display: grid;
+  grid-column-end: autox;
+  gap: 24px;
+  grid-template-areas:
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left right right right"
+    "left left left bottom bottom bottom"
+    "left left left bottom bottom bottom"
+    "left left left bottom bottom bottom";
+}
