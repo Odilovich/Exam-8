@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.0",
     "@mui/icons-material": "^5.16.6",
     "@mui/material": "^5.16.6",
     "antd": "^5.18.2",
+    "axios": "^1.7.3",
     "formik": "^2.4.6",
     "js-cookie": "^3.0.5",
     "next": "14.2.4",

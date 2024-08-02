@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { ProductStore } from "../interface/products";
+import { ProductStore } from "@/interface/products";
 import  Products  from "@/service/products";
 const useProductStore = create<ProductStore>(() => ({
   data: [],

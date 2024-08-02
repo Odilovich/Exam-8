@@ -1,4 +1,4 @@
-import { getDataFromCookie } from "@data-service";
+import { getDataFromCookie } from "@/utils/data-service";
 import axios from "axios";
 import type { AxiosInstance } from "axios";
 

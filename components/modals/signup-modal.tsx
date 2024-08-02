@@ -1,3 +1,4 @@
+"use client"
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";

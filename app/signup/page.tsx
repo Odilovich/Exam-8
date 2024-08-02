@@ -1,3 +1,4 @@
+"use client"
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { TextField, IconButton, InputAdornment, Button, FormLabel, FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -5,7 +6,6 @@ import { signUpValidationSchema } from "../../utils/validations"
 import { SignUp } from "@/interface/auth";
 import  auth  from "@/service/auth";
 import  Signup  from "@/components/modals/signup-modal";
-import "./style.scss"
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Notification from "@/utils/notification";

@@ -1,6 +1,7 @@
-import Card from "../../components/ui/product-card";
+"use client"
+import Card from "@/components/ui/product-card";
 import  Container  from "@/components/container";
-import useProductStore from "../../store/products";
+import useProductStore from "@/store/products";
 import { useEffect, useState } from "react";
 const index = () => {
   const {getLikedProducts} = useProductStore()

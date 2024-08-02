@@ -1,5 +1,5 @@
-import request from "../config";
-import { Request } from "@auth-interface";
+import request from "./config";
+import { Request } from "@/interface/auth";
 
 const auth: Request = {
     sign_up: (data) => request.post("/register", data),
