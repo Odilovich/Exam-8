@@ -4,7 +4,7 @@ import Jacket from "@/assets/images/big-jacket.png";
 import Trinajor from "@/assets/images/big-trenajor.png";
 import Bag from "@/assets/images/big-bag.png";
 import Boots from "@/assets/images/big-boots.png";
-const index = () => {
+const Index = () => {
   return (
     <section className="py-[70px] bg-[#F2F2F2]">
       <Container>
@@ -20,4 +20,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

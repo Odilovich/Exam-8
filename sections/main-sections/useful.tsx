@@ -1,7 +1,7 @@
 import Container from "@/components/container";
 import Nimadir from '@/assets/images/nimadir.png'
 import Image from "next/image";
-const index = () => {
+const Index = () => {
   return (
     <section className="bg-[#F2F2F2] pb-[80px]">
       <Container>
@@ -30,4 +30,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

@@ -7,7 +7,7 @@ import Bag from "@/assets/images/bag.png";
 import { Carousel } from "antd";
 import "./style.css";
 
-function index() {
+function Index() {
   return (
     <section className="bg-[#F2F2F2] pt-5 pb-[83px]">
       <Container>
@@ -123,4 +123,4 @@ function index() {
   );
 }
 
-export default index;
+export default Index;

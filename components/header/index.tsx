@@ -47,8 +47,8 @@ const Index = () => {
                 </span>
               </div>
               <div className="flex gap-[15px]">
-                {data.map((item, index) => (
-                  <li key={index}>
+                {data.map((item, Index) => (
+                  <li key={Index}>
                     <Link
                       href={item.path}
                       className="text-white hover:text-yellow-400 duration-200"

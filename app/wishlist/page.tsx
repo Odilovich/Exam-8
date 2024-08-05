@@ -3,7 +3,7 @@ import Card from "@/components/ui/product-card";
 import  Container  from "@/components/container";
 import useProductStore from "@/store/products";
 import { useEffect, useState } from "react";
-const index = () => {
+const Index = () => {
   const {getLikedProducts} = useProductStore()
   const [data, setData] = useState([])
   const [liked, setLiked]:any = useState([])
@@ -23,8 +23,8 @@ const index = () => {
           <p className="text-[35px] font-semibold mb-5">Liked products</p>
           <div className="grid gap-x-3 justify-center grid-cols-1 sm:grid-cols-2  md:grid-cols-3 gap-y-10 lg:grid-cols-4">
           {
-            data?.map((item, index) => {
-              return <Card liked={liked} key={index} data={item} />;
+            data?.map((item, Index) => {
+              return <Card liked={liked} key={Index} data={item} />;
             })
           }
           </div>
@@ -34,4 +34,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

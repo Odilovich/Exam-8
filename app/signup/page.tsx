@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Notification from "@/utils/notification";
 
-const index = () => {
+const Index = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [modal, setModal] = useState(false);
@@ -161,4 +161,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

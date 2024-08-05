@@ -6,7 +6,7 @@ import Adidas from "@/assets/icons/adidas.svg";
 import Reebok from "@/assets/icons/reebok.svg";
 import Image from "next/image";
 import { Carousel } from "antd";
-const index = () => {
+const Index = () => {
   return (
     <section className="bg-[#F2F2F2] pb-[80px]">
       <Container>
@@ -47,4 +47,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

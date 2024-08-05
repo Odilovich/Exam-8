@@ -2,7 +2,7 @@ import ProductStore from "@/store/products"
 import Image from "next/image";
 import Delete from "@/assets/icons/trash.svg"
 import { getDataFromCookie } from "@/utils/data-service";
-const index = (props: any) => {
+const Index = (props: any) => {
   const { cartProduct, getCartProducts } = ProductStore();
   const id = getDataFromCookie("user_id")
   const handleDelete = async () => {
@@ -48,4 +48,4 @@ const index = (props: any) => {
   );
 };
 
-export default index;
+export default Index;

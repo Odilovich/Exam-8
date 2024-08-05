@@ -7,7 +7,7 @@ import Boots from "@/assets/images/big-boots.png";
 import HomeIcon from "@/assets/icons/u_home-alt.svg"
 import NextMini from "@/assets/icons/right-mini.svg"
 import Image from "next/image";
-const index = () => {
+const Index = () => {
   return (
     <section className="bg-[#F2F2F2] pb-[80px] pt-[20px]">
       <Container>
@@ -108,4 +108,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

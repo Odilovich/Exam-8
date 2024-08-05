@@ -24,7 +24,7 @@ interface IModalProp extends ModalProps {
   email: string;
 }
 
-const index = ({ open, handleClose, email }: IModalProp) => {
+const Index = ({ open, handleClose, email }: IModalProp) => {
   const [otp, setOtp] = useState("");
   const [secondsLeft, setSecondsLeft] = useState(60);
   const router = useRouter();
@@ -104,4 +104,4 @@ const index = ({ open, handleClose, email }: IModalProp) => {
   );
 };
 
-export default index;
+export default Index;

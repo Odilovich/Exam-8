@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import Notification from "@/utils/notification";
 import { useState } from "react";
 
-const index = () => {
+const Index = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const initialValues: Signin = {
@@ -121,4 +121,4 @@ const index = () => {
     </>
   );
 };
-export default index;
+export default Index;

@@ -3,7 +3,7 @@ import Container from "@/components/container";
 import Card from "@/components/ui/product-card";
 import ProductStore from "@/store/products";
 import { useEffect, useState } from "react";
-const index = () => {
+const Index = () => {
   const [data, setData] = useState([]);
   const [params] = useState({
     page: 1,
@@ -43,4 +43,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

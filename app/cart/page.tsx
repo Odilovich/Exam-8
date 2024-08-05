@@ -9,7 +9,7 @@ import Payme from "@/assets/icons/PAYME.svg";
 import ProductStore from "@/store/products";
 import { getDataFromCookie } from "@/utils/data-service";
 import { useEffect } from "react";
-const index = () => {
+const Index = () => {
   const { getCartProducts, cart } = ProductStore();
   const id = getDataFromCookie("user_id");
   const getData = async () => {
@@ -38,9 +38,9 @@ const index = () => {
             </div>
             <div className=" flex flex-col gap-[10px]">
               {cart?.length > 0 ? (
-                cart?.map((item: any, index: number) => (
+                cart?.map((item: any, Index: number) => (
                   <Cart
-                    key={index}
+                    key={Index}
                     image={item.image_url[0]}
                     title={item.product_name}
                     price={item.cost}
@@ -145,4 +145,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

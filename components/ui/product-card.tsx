@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { getDataFromCookie } from "@/utils/data-service";
 import Notification from "@/utils/notification";
 
-const index = ({ image, title, price, content, id, isActive, isLiked }: any) => {
+const Index = ({ image, title, price, content, id, isActive, isLiked }: any) => {
   const { cartProduct, likeProduct } = ProductStore();
   const [cart, setCart] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -114,4 +114,4 @@ const index = ({ image, title, price, content, id, isActive, isLiked }: any) => 
   );
 };
 
-export default index;
+export default Index;

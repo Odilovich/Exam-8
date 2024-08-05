@@ -6,7 +6,7 @@ import LittleBoot from "@/assets/images/little-boot.png";
 import Jacket from "@/assets/images/jacket.png";
 import HeadClothes from "@/assets/images/headclothes.png";
 import Skying from "@/assets/images/skying.png";
-const index = () => {
+const Index = () => {
   return (
     <>
       <section className="py-4">
@@ -26,4 +26,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

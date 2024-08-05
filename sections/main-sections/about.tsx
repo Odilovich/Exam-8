@@ -1,5 +1,5 @@
 import Container from "@/components/container";
-const index = () => {
+const Index = () => {
   return (
     <section className="bg-[#F2F2F2] pb-[80px]">
       <Container>
@@ -45,4 +45,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

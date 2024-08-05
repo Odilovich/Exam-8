@@ -4,7 +4,7 @@ import Truck from "@/assets/icons/Track.svg"
 import Advant from "@/assets/icons/Advant.svg"
 import Discont from "@/assets/icons/discount.svg"
 import Table from "@/assets/icons/table.svg"
-const index = () => {
+const Index = () => {
   return (
     <section className="bg-[#F2F2F2] pb-[80px]">
       <Container>
@@ -20,4 +20,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
