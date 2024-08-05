@@ -46,9 +46,10 @@ const index = ({ open, handleClose, email }: IModalProp) => {
   }, [secondsLeft, handleClose])
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(otp);
     try {
       const response = await auth.auth_verify(email, otp);
-      if (response.status === 200) {
+      if (response.status === 201) {
         router.push("/signin");
         Notification({
           title: "Successfully registrate",

@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import ProductStore from "@/store/products";
 import Container from "@/components/container";
 import LogoIcon from "@/assets/icons/main-logo.svg";
 import PhoneIcon from "@/assets/icons/u_phone-alt.svg";
@@ -12,11 +14,14 @@ import SearchIcon from "@/assets/icons/u_search.svg";
 import UserIcon from "@/assets/icons/u_user.svg";
 import HeartIcon from "@/assets/icons/u_heart-sign.svg";
 import CartIcon from "@/assets/icons/u_shopping-cart-alt.svg";
+import { Badge } from "@mui/material";
 const Index = () => {
   const router = useRouter();
+  const { totalCount } = ProductStore();
   const handleClick = () => {
     router.push("/");
   };
+  const pathname = usePathname();
   const data = [
     { title: "Продукты", path: "/products" },
     { title: "Контакты", path: "/contacts" },
@@ -24,6 +29,8 @@ const Index = () => {
     { title: "Новости", path: "/news" },
     { title: "О нас", path: "/abouts" },
   ];
+  console.log(totalCount);
+
   return (
     <header className="bg-[#000]">
       <nav>
@@ -40,13 +47,16 @@ const Index = () => {
                 </span>
               </div>
               <div className="flex gap-[15px]">
-              {data.map((item, index) => (
-                    <li key={index}>
-                      <Link href={item.path} className="text-white hover:text-yellow-400 duration-200">
-                        {item.title}
-                      </Link>
-                    </li>
-                  ))}
+                {data.map((item, index) => (
+                  <li key={index}>
+                    <Link
+                      href={item.path}
+                      className="text-white hover:text-yellow-400 duration-200"
+                    >
+                      {item.title}
+                    </Link>
+                  </li>
+                ))}
               </div>
             </div>
             <div className="flex gap-[30px]">
@@ -92,17 +102,36 @@ const Index = () => {
               </div>
               <div className="flex gap-x-[25px] items-end">
                 <div className="flex items-center gap-x-[13px]">
-                  <button onClick={()=>router.push("/signin")} className="w-[45px] h-[45px] bg-[#F2F2F2] rounded-[3px] flex items-center justify-center cursor-pointer">
+                  <button
+                    onClick={() => router.push("/signin")}
+                    className="w-[45px] h-[45px] bg-[#F2F2F2] rounded-[3px] flex items-center justify-center cursor-pointer"
+                  >
                     <Image src={UserIcon} alt="user icon" />
                   </button>
                   <button className="w-[45px] h-[45px] bg-[#F2F2F2] rounded-[3px] flex items-center justify-center cursor-pointer">
                     <Image src={HeartIcon} alt="heart icon" />
                   </button>
                 </div>
-                <button className="flex items-center gap-[5px] bg-[#F2F2F2] px-[30px] py-[12px]">
-                  <Image src={CartIcon} alt="cart icon" />
-                  <span className="text-[20px]">Корзина</span>
-                </button>
+                <Badge
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  badgeContent={totalCount}
+                  color="warning"
+                >
+                  <button
+                    onClick={() => router.push("/cart")}
+                    className={
+                      pathname === "/cart"
+                        ? "flex items-center gap-[5px] bg-[#FBD029] px-[30px] py-[12px] rounded-md"
+                        : "flex items-center gap-[5px] bg-[#F2F2F2] px-[30px] py-[12px] rounded-md"
+                    }
+                  >
+                    <Image src={CartIcon} alt="cart icon" />
+                    <span className="text-[20px]">Корзина</span>
+                  </button>
+                </Badge>
               </div>
             </div>
           </Container>

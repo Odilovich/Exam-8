@@ -1,31 +1,84 @@
 "use client";
+import ProductStore from "@/store/products";
 import Container from "@/components/container";
 import Image from "next/image";
 import HomeIcon from "@/assets/icons/u_home-alt.svg";
 import NextMini from "@/assets/icons/right-mini.svg";
 import ReactImageGallery from "react-image-gallery";
-import CommentImg from "@/assets/icons/comment-img.svg";
 import "react-image-gallery/styles/css/image-gallery.css";
 import "./style.css";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCartOutlined";
+import { getDataFromCookie } from "@/utils/data-service";
+import Notification from "@/utils/notification";
+import { Avatar, Button } from "@mui/material";
 const Index = () => {
-  interface GalleryImage {
-    original: string;
-    thumbnail: string;
-  }
-  const images: GalleryImage[] = [
-    {
-      original: "https://picsum.photos/id/1018/1000/600/",
-      thumbnail: "https://picsum.photos/id/1018/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1015/1000/600/",
-      thumbnail: "https://picsum.photos/id/1015/250/150/",
-    },
-    {
-      original: "https://picsum.photos/id/1019/1000/600/",
-      thumbnail: "https://picsum.photos/id/1019/250/150/",
-    },
-  ];
+  const [data, setData]: any = useState([]);
+  const [cart, setCart] = useState(false);
+  const [comments, setComments]: any = useState();
+  const [productImages, setProductImages] = useState([]);
+  const { getProduct, cartProduct, getCommentsProduct } = ProductStore();
+  const { id } = useParams();
+  const token = getDataFromCookie("access_token");
+  const [params, setParams] = useState({
+    page: 1,
+    limit: 3,
+    id: id,
+  });
+  const handleCart = async () => {
+    if (token) {
+      setCart(!cart);
+      const payload = {
+        productId: id,
+      };
+      try {
+        await cartProduct(payload);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      Notification({
+        type: "error",
+        title: "Вы должны войти, чтобы добавить товар в корзину",
+      });
+    }
+  };
+
+  const product = async () => {
+    try {
+      const res = await getProduct(id);
+      setData(res?.data);
+      setProductImages(res?.data.image_url);
+    } catch (err) {
+      console.log("Error fetching product", err);
+    }
+  };
+  useEffect(() => {
+    product();
+  }, []);
+  useEffect(() => {
+    if (data?.basket === true) {
+      setCart(true);
+    }
+  }, [data]);
+  const images = productImages?.map((item: any) => ({
+    original: item,
+    thumbnail: item,
+  }));
+
+  const getComments = async () => {
+    const res: any = await getCommentsProduct(params);
+    setComments(res?.data);
+  };
+  useEffect(() => {
+    getComments();
+  }, [params]);
+  console.log(comments);
+
+  const otherComments = () => {
+    setParams((prevParams) => ({ ...prevParams, limit: 1000 }));
+  };
   return (
     <section className="pt-[16px] pb-[80px] bg-[#F2F2F2]">
       <Container>
@@ -39,7 +92,7 @@ const Index = () => {
             Продукты
           </a>
           <Image src={NextMini} className="mr-[3px]" alt="img" />{" "}
-          <p className="text-[#000]">О нас</p>
+          <p className="text-[#000]">{data?.product_name}</p>
         </div>
         <div className="flex items-start justify-between gap-6 mb-[80px]">
           <ReactImageGallery
@@ -51,19 +104,16 @@ const Index = () => {
           />
           <div className="bg-[white] w-full max-w-[500px] p-[50px] rounded-lg">
             <h1 className="text-[32px] font-medium leading-[34px] mb-4">
-              Гантель виниловая, 2 х 3 кг
+              {data?.product_name}
             </h1>
-            <p className="mb-5">
-              В составе томатов в большом количестве содержатся сахара,
-              клетчатка, пектины, бета-каротин, витамины.
-            </p>
+            <p className="mb-5">{data?.description}</p>
             <div className="flex items-center gap-2">
               <span>В комлекте:</span>
-              <p className="text-[20px] font-medium">2 шт.</p>
+              <p className="text-[20px] font-medium">{data?.count} шт.</p>
             </div>
             <div className="flex items-center gap-2 mb-[35px]">
               <span>Страна производства:</span>
-              <p className="text-[20px] font-medium">Китай</p>
+              <p className="text-[20px] font-medium">{data?.made_in}</p>
             </div>
             <div className="mb-[35px] flex items-center gap-3">
               <div>
@@ -73,23 +123,36 @@ const Index = () => {
               <p className="text-[20px] border-l border-l-black pl-2">1 шт.</p>
             </div>
             <div className="flex items-center gap-5">
-              <button className="w-[145px] py-[12px] bg-[#FBD029] rounded-md flex items-center justify-center gap-[5px]">
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="17"
-                    viewBox="0 0 16 17"
-                    fill="none"
-                  >
-                    <path
-                      d="M14.333 10.5002C14.3315 10.1 14.21 9.70943 13.9842 9.37903C13.7584 9.04863 13.4387 8.79357 13.0663 8.64684L14.313 3.98017C14.3391 3.88078 14.3418 3.77672 14.321 3.67611C14.3001 3.5755 14.2564 3.48106 14.193 3.40017C14.1283 3.32437 14.0473 3.26406 13.9562 3.22368C13.865 3.1833 13.766 3.16388 13.6663 3.16684H4.53301L4.31301 2.32684C4.27476 2.18478 4.19059 2.05936 4.07362 1.97013C3.95666 1.88089 3.81346 1.83286 3.66634 1.8335H2.33301V3.16684H3.15301L4.80634 9.34017C4.84541 9.48561 4.93257 9.61354 5.05362 9.70312C5.17468 9.7927 5.3225 9.83866 5.47301 9.8335H12.333C12.5098 9.8335 12.6794 9.90374 12.8044 10.0288C12.9294 10.1538 12.9997 10.3234 12.9997 10.5002C12.9997 10.677 12.9294 10.8465 12.8044 10.9716C12.6794 11.0966 12.5098 11.1668 12.333 11.1668H3.66634C3.48953 11.1668 3.31996 11.2371 3.19494 11.3621C3.06991 11.4871 2.99967 11.6567 2.99967 11.8335C2.99967 12.0103 3.06991 12.1799 3.19494 12.3049C3.31996 12.4299 3.48953 12.5002 3.66634 12.5002H4.45301C4.34336 12.8023 4.30813 13.1263 4.35029 13.4449C4.39246 13.7635 4.51077 14.0672 4.69522 14.3304C4.87967 14.5936 5.12482 14.8084 5.40991 14.9567C5.695 15.1051 6.01164 15.1825 6.33301 15.1825C6.65438 15.1825 6.97101 15.1051 7.25611 14.9567C7.5412 14.8084 7.78635 14.5936 7.9708 14.3304C8.15524 14.0672 8.27356 13.7635 8.31572 13.4449C8.35788 13.1263 8.32265 12.8023 8.21301 12.5002H9.78634C9.68653 12.7752 9.6483 13.0689 9.67434 13.3603C9.70037 13.6518 9.79005 13.934 9.93704 14.187C10.084 14.44 10.2847 14.6577 10.525 14.8247C10.7653 14.9917 11.0393 15.1039 11.3277 15.1535C11.6161 15.203 11.9119 15.1887 12.1941 15.1115C12.4764 15.0343 12.7382 14.8961 12.9612 14.7066C13.1843 14.5172 13.363 14.2811 13.4848 14.015C13.6066 13.749 13.6686 13.4594 13.6663 13.1668C13.6651 12.8224 13.5731 12.4844 13.3997 12.1868C13.6848 12.0071 13.9198 11.7582 14.083 11.4634C14.2461 11.1685 14.3321 10.8372 14.333 10.5002ZM11.7263 8.50017H5.99967L4.89301 4.50017H12.7997L11.7263 8.50017ZM6.33301 13.8335C6.20115 13.8335 6.07226 13.7944 5.96263 13.7211C5.85299 13.6479 5.76755 13.5438 5.71709 13.422C5.66663 13.3001 5.65343 13.1661 5.67915 13.0368C5.70487 12.9075 5.76837 12.7887 5.8616 12.6954C5.95484 12.6022 6.07363 12.5387 6.20295 12.513C6.33227 12.4873 6.46631 12.5005 6.58813 12.5509C6.70995 12.6014 6.81407 12.6868 6.88732 12.7965C6.96058 12.9061 6.99967 13.035 6.99967 13.1668C6.99967 13.3436 6.92944 13.5132 6.80441 13.6382C6.67939 13.7633 6.50982 13.8335 6.33301 13.8335ZM11.6663 13.8335C11.5345 13.8335 11.4056 13.7944 11.296 13.7211C11.1863 13.6479 11.1009 13.5438 11.0504 13.422C11 13.3001 10.9868 13.1661 11.0125 13.0368C11.0382 12.9075 11.1017 12.7887 11.1949 12.6954C11.2882 12.6022 11.407 12.5387 11.5363 12.513C11.6656 12.4873 11.7996 12.5005 11.9215 12.5509C12.0433 12.6014 12.1474 12.6868 12.2207 12.7965C12.2939 12.9061 12.333 13.035 12.333 13.1668C12.333 13.3436 12.2628 13.5132 12.1377 13.6382C12.0127 13.7633 11.8432 13.8335 11.6663 13.8335Z"
-                      fill="#1F1D14"
-                    />
-                  </svg>
-                </span>
-                <span>Корзина</span>
-              </button>
+              {cart === false ? (
+                <button
+                  onClick={handleCart}
+                  className="w-[145px] py-[12px] bg-[#FBD029] rounded-md flex items-center justify-center gap-[5px]"
+                >
+                  <span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="17"
+                      viewBox="0 0 16 17"
+                      fill="none"
+                    >
+                      <path
+                        d="M14.333 10.5002C14.3315 10.1 14.21 9.70943 13.9842 9.37903C13.7584 9.04863 13.4387 8.79357 13.0663 8.64684L14.313 3.98017C14.3391 3.88078 14.3418 3.77672 14.321 3.67611C14.3001 3.5755 14.2564 3.48106 14.193 3.40017C14.1283 3.32437 14.0473 3.26406 13.9562 3.22368C13.865 3.1833 13.766 3.16388 13.6663 3.16684H4.53301L4.31301 2.32684C4.27476 2.18478 4.19059 2.05936 4.07362 1.97013C3.95666 1.88089 3.81346 1.83286 3.66634 1.8335H2.33301V3.16684H3.15301L4.80634 9.34017C4.84541 9.48561 4.93257 9.61354 5.05362 9.70312C5.17468 9.7927 5.3225 9.83866 5.47301 9.8335H12.333C12.5098 9.8335 12.6794 9.90374 12.8044 10.0288C12.9294 10.1538 12.9997 10.3234 12.9997 10.5002C12.9997 10.677 12.9294 10.8465 12.8044 10.9716C12.6794 11.0966 12.5098 11.1668 12.333 11.1668H3.66634C3.48953 11.1668 3.31996 11.2371 3.19494 11.3621C3.06991 11.4871 2.99967 11.6567 2.99967 11.8335C2.99967 12.0103 3.06991 12.1799 3.19494 12.3049C3.31996 12.4299 3.48953 12.5002 3.66634 12.5002H4.45301C4.34336 12.8023 4.30813 13.1263 4.35029 13.4449C4.39246 13.7635 4.51077 14.0672 4.69522 14.3304C4.87967 14.5936 5.12482 14.8084 5.40991 14.9567C5.695 15.1051 6.01164 15.1825 6.33301 15.1825C6.65438 15.1825 6.97101 15.1051 7.25611 14.9567C7.5412 14.8084 7.78635 14.5936 7.9708 14.3304C8.15524 14.0672 8.27356 13.7635 8.31572 13.4449C8.35788 13.1263 8.32265 12.8023 8.21301 12.5002H9.78634C9.68653 12.7752 9.6483 13.0689 9.67434 13.3603C9.70037 13.6518 9.79005 13.934 9.93704 14.187C10.084 14.44 10.2847 14.6577 10.525 14.8247C10.7653 14.9917 11.0393 15.1039 11.3277 15.1535C11.6161 15.203 11.9119 15.1887 12.1941 15.1115C12.4764 15.0343 12.7382 14.8961 12.9612 14.7066C13.1843 14.5172 13.363 14.2811 13.4848 14.015C13.6066 13.749 13.6686 13.4594 13.6663 13.1668C13.6651 12.8224 13.5731 12.4844 13.3997 12.1868C13.6848 12.0071 13.9198 11.7582 14.083 11.4634C14.2461 11.1685 14.3321 10.8372 14.333 10.5002ZM11.7263 8.50017H5.99967L4.89301 4.50017H12.7997L11.7263 8.50017ZM6.33301 13.8335C6.20115 13.8335 6.07226 13.7944 5.96263 13.7211C5.85299 13.6479 5.76755 13.5438 5.71709 13.422C5.66663 13.3001 5.65343 13.1661 5.67915 13.0368C5.70487 12.9075 5.76837 12.7887 5.8616 12.6954C5.95484 12.6022 6.07363 12.5387 6.20295 12.513C6.33227 12.4873 6.46631 12.5005 6.58813 12.5509C6.70995 12.6014 6.81407 12.6868 6.88732 12.7965C6.96058 12.9061 6.99967 13.035 6.99967 13.1668C6.99967 13.3436 6.92944 13.5132 6.80441 13.6382C6.67939 13.7633 6.50982 13.8335 6.33301 13.8335ZM11.6663 13.8335C11.5345 13.8335 11.4056 13.7944 11.296 13.7211C11.1863 13.6479 11.1009 13.5438 11.0504 13.422C11 13.3001 10.9868 13.1661 11.0125 13.0368C11.0382 12.9075 11.1017 12.7887 11.1949 12.6954C11.2882 12.6022 11.407 12.5387 11.5363 12.513C11.6656 12.4873 11.7996 12.5005 11.9215 12.5509C12.0433 12.6014 12.1474 12.6868 12.2207 12.7965C12.2939 12.9061 12.333 13.035 12.333 13.1668C12.333 13.3436 12.2628 13.5132 12.1377 13.6382C12.0127 13.7633 11.8432 13.8335 11.6663 13.8335Z"
+                        fill="#1F1D14"
+                      />
+                    </svg>
+                  </span>
+                  <span>Корзина</span>
+                </button>
+              ) : (
+                <button
+                  onClick={handleCart}
+                  className="w-[145px] py-[12px] bg-red-500 rounded-md flex items-center justify-center gap-[5px]"
+                >
+                  <RemoveShoppingCartOutlinedIcon />
+                  <span>Удалить</span>
+                </button>
+              )}
               <button className="w-[145px] py-[12px] border-[#FBD029] border-2 rounded-md flex items-center justify-center gap-[5px]">
                 <span>
                   <svg
@@ -115,12 +178,9 @@ const Index = () => {
             <p className="text-[32px] font-medium mb-[30px]">Описание</p>
             <div className="py-[40px] px-[70px] bg-white rounded-lg h-[470px]">
               <h2 className="text-[24px] font-medium mb-7">
-                Гантель виниловая, 2 х 3 кг
+                {data?.product_name}
               </h2>
-              <p className="mb-[50px]">
-                В составе томатов в большом количестве содержатся сахара,
-                клетчатка, пектины, бета-каротин, витамины.
-              </p>
+              <p className="mb-[50px]">{data?.description}</p>
               <div className="grid grid-cols-2 gap-y-[30px]">
                 <div className="flex flex-col gap-[5px]">
                   <span className="text-[20px] font-medium">Вес гантела:</span>
@@ -128,7 +188,7 @@ const Index = () => {
                 </div>
                 <div className="flex flex-col gap-[5px]">
                   <span className="text-[20px] font-medium">Цвета:</span>
-                  <span>Синий, Красный</span>
+                  <span>{data?.color}</span>
                 </div>
                 <div className="flex flex-col gap-[5px]">
                   <span className="text-[20px] font-medium">Вес гантела:</span>
@@ -143,140 +203,46 @@ const Index = () => {
           </div>
           <div className="w-[50%]">
             <p className="text-[32px] font-medium mb-[30px]">Отзыви</p>
-            <div className="py-[40px] px-[70px] bg-white rounded-lg h-[470px]">
+            <div className="py-[40px] px-[70px] bg-white rounded-lg min-h-[470px]">
               <div className="flex flex-col gap-y-10 mb-10">
-                <div className="flex gap-3">
-                  <div>
-                    <Image src={CommentImg} alt="img" />
-                  </div>
-                  <div>
-                    <div className="mb-[13px]">
-                      <p className="text-[20px] font-medium">Шахзод Анваров</p>
-                      <p className="opacity-60">клиент</p>
+                {comments?.Comment.length > 0 ? (
+                  comments?.Comment.map((comment: any) => (
+                    <div className="flex gap-3">
+                      <div>
+                        <Avatar>{comment.OwnerID.slice(0, 1)}</Avatar>
+                      </div>
+                      <div>
+                        <div className="mb-[13px]">
+                          <p className="text-[20px] font-medium">
+                            {comment.OwnerID}
+                          </p>
+                          <p className="opacity-60">клиент</p>
+                        </div>
+                        <div>
+                          <p className="mb-[5px]">{comment.Message}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="mb-[5px]">
-                        В составе томатов в большом количестве содержатся
-                        сахара, клетчатка, пектины, бета-каротин, витамины.
-                      </p>
-                      <span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="112"
-                          height="20"
-                          viewBox="0 0 112 20"
-                          fill="none"
-                        >
-                          <path
-                            d="M33 0L35.2451 6.90983H42.5106L36.6327 11.1803L38.8779 18.0902L33 13.8197L27.1221 18.0902L29.3673 11.1803L23.4894 6.90983H30.7549L33 0Z"
-                            fill="#FBD029"
-                          />
-                          <path
-                            d="M10 0L12.2451 6.90983H19.5106L13.6327 11.1803L15.8779 18.0902L10 13.8197L4.12215 18.0902L6.36729 11.1803L0.489435 6.90983H7.75486L10 0Z"
-                            fill="#FBD029"
-                          />
-                          <path
-                            d="M56 0L58.2451 6.90983H65.5106L59.6327 11.1803L61.8779 18.0902L56 13.8197L50.1221 18.0902L52.3673 11.1803L46.4894 6.90983H53.7549L56 0Z"
-                            fill="#FBD029"
-                          />
-                          <path
-                            d="M102 0L104.245 6.90983H111.511L105.633 11.1803L107.878 18.0902L102 13.8197L96.1221 18.0902L98.3673 11.1803L92.4894 6.90983H99.7549L102 0Z"
-                            fill="#D9D9D9"
-                          />
-                          <path
-                            d="M79 0L81.2451 6.90983H88.5106L82.6327 11.1803L84.8779 18.0902L79 13.8197L73.1221 18.0902L75.3673 11.1803L69.4894 6.90983H76.7549L79 0Z"
-                            fill="#D9D9D9"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <div>
-                    <Image src={CommentImg} alt="img" />
-                  </div>
-                  <div>
-                    <div className="mb-[13px]">
-                      <p className="text-[20px] font-medium">Шахзод Анваров</p>
-                      <p className="opacity-60">клиент</p>
-                    </div>
-                    <div>
-                      <p className="mb-[5px]">
-                        В составе томатов в большом количестве содержатся
-                        сахара, клетчатка, пектины, бета-каротин, витамины.
-                      </p>
-                      <span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="112"
-                          height="20"
-                          viewBox="0 0 112 20"
-                          fill="none"
-                        >
-                          <path
-                            d="M33 0L35.2451 6.90983H42.5106L36.6327 11.1803L38.8779 18.0902L33 13.8197L27.1221 18.0902L29.3673 11.1803L23.4894 6.90983H30.7549L33 0Z"
-                            fill="#FBD029"
-                          />
-                          <path
-                            d="M10 0L12.2451 6.90983H19.5106L13.6327 11.1803L15.8779 18.0902L10 13.8197L4.12215 18.0902L6.36729 11.1803L0.489435 6.90983H7.75486L10 0Z"
-                            fill="#FBD029"
-                          />
-                          <path
-                            d="M56 0L58.2451 6.90983H65.5106L59.6327 11.1803L61.8779 18.0902L56 13.8197L50.1221 18.0902L52.3673 11.1803L46.4894 6.90983H53.7549L56 0Z"
-                            fill="#FBD029"
-                          />
-                          <path
-                            d="M102 0L104.245 6.90983H111.511L105.633 11.1803L107.878 18.0902L102 13.8197L96.1221 18.0902L98.3673 11.1803L92.4894 6.90983H99.7549L102 0Z"
-                            fill="#D9D9D9"
-                          />
-                          <path
-                            d="M79 0L81.2451 6.90983H88.5106L82.6327 11.1803L84.8779 18.0902L79 13.8197L73.1221 18.0902L75.3673 11.1803L69.4894 6.90983H76.7549L79 0Z"
-                            fill="#D9D9D9"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                  ))
+                ) : (
+                  <p className="text-[20px] flex items-center justify-center">
+                    Нет отзывов
+                  </p>
+                )}
               </div>
-              <a className="opacity-60 flex items-center gap-2 cursor-pointer justify-end">
-                <span>Все отзыви</span>
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
+              {comments?.Comment.length > 0 ? (
+                <div className="flex justify-center">
+                  <Button
+                    onClick={otherComments}
+                    color="inherit"
+                    variant="outlined"
                   >
-                    <g opacity="0.6" clip-path="url(#clip0_2_792)">
-                      <path
-                        d="M-1 8H13"
-                        stroke="black"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M8 12L13 8L8 4"
-                        stroke="black"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_2_792">
-                        <rect
-                          width="16"
-                          height="16"
-                          fill="white"
-                          transform="matrix(-1 0 0 1 16 0)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg>
-                </span>
-              </a>
+                    Все отзыви
+                  </Button>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>

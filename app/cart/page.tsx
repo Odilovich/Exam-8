@@ -1,15 +1,24 @@
+"use client";
 import Container from "@/components/container";
-import Jacket from "@/assets/images/big-jacket.png";
-import Trinajor from "@/assets/images/big-trenajor.png";
 import Bag from "@/assets/images/big-bag.png";
-import Boots from "@/assets/images/big-boots.png";
 import HomeIcon from "@/assets/icons/u_home-alt.svg";
 import NextMini from "@/assets/icons/right-mini.svg";
 import Image from "next/image";
 import Cart from "@/components/ui/basket-card";
-import Click from "@/assets/icons/CLICK.svg"
+import Click from "@/assets/icons/CLICK.svg";
 import Payme from "@/assets/icons/PAYME.svg";
+import ProductStore from "@/store/products";
+import { getDataFromCookie } from "@/utils/data-service";
+import { useEffect } from "react";
 const index = () => {
+  const { getCartProducts, cart } = ProductStore();
+  const id = getDataFromCookie("user_id");
+  const getData = async () => {
+    await getCartProducts(id);
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <section className="bg-[#F2F2F2] pb-[80px] pt-[20px]">
       <Container>
@@ -27,27 +36,23 @@ const index = () => {
               <h3 className=" text-[24px] text-[#000] font-medium">
                 Ваша корзина
               </h3>
-              <button className=" text-[14px] text-[#FF1313]">
-                Очистить все
-              </button>
             </div>
             <div className=" flex flex-col gap-[10px]">
-              <Cart
-                image={Bag}
-                title={"Гантель виниловая, 2 х 3 кг Гантель "}
-              />
-              <Cart
-                image={Jacket}
-                title={"Гантель виниловая, 2 х 3 кг Гантель "}
-              />
-              <Cart
-                image={Trinajor}
-                title={"Гантель виниловая, 2 х 3 кг Гантель "}
-              />
-              <Cart
-                image={Boots}
-                title={"Гантель виниловая, 2 х 3 кг Гантель "}
-              />
+              {cart?.length > 0 ? (
+                cart?.map((item: any, index: number) => (
+                  <Cart
+                    key={index}
+                    image={Bag}
+                    title={item.product_name}
+                    price={item.cost}
+                    id={item.product_id}
+                  />
+                ))
+              ) : (
+                <div className="flex justify-center mt-10">
+                  <p className="text-[32px] opacity-50">Корзина пуста</p>
+                </div>
+              )}
             </div>
             <p className=" text-[20px] underline text-[#06F] mt-[60px] mb-[18px]">
               Все информация о доставке
@@ -61,7 +66,9 @@ const index = () => {
             </p>
           </div>
           <div className="bg-white p-[40px] rounded-lg w-[505px]">
-            <h3 className="text-[20px] text-[#1F1D14] mb-[15px] font-medium">Итого</h3>
+            <h3 className="text-[20px] text-[#1F1D14] mb-[15px] font-medium">
+              Итого
+            </h3>
             <div className=" flex items-center justify-between">
               <p className="text-[20px] text-[#1F1D14] w-[153px]">
                 Кол-во товаров:
@@ -77,25 +84,61 @@ const index = () => {
                 <span className="text-[14px] ml-[2px]">UZS</span>
               </div>
             </div>
-            <h3 className="text-[20px] text-[#1F1D14] font-medium mt-[40px] mb-[24px]">Ваши данные</h3>
+            <h3 className="text-[20px] text-[#1F1D14] font-medium mt-[40px] mb-[24px]">
+              Ваши данные
+            </h3>
             <form>
-                <label className="block text-[16px] mb-[8px] text-[#1F1D14]">Имя /Фамиля</label>
-                <input className="w-[414px] ring-1 ring-black outline-none mb-[16px] h-[60px] py-[18px] pl-[25px] bg-[#F2F2F2] rounded-[5px]" type="text" placeholder="Имя /Фамиля"/>
+              <label className="block text-[16px] mb-[8px] text-[#1F1D14]">
+                Имя /Фамиля
+              </label>
+              <input
+                className="w-[414px] ring-1 ring-black outline-none mb-[16px] h-[60px] py-[18px] pl-[25px] bg-[#F2F2F2] rounded-[5px]"
+                type="text"
+                placeholder="Имя /Фамиля"
+              />
 
-                <label className="block text-[16px] mb-[8px] text-[#1F1D14]">Ваш номер</label>
-                <input className="w-[414px] ring-1 ring-black outline-none mb-[16px] h-[60px] py-[18px] pl-[25px] bg-[#F2F2F2] rounded-[5px]" type="number" placeholder="+998 __ ___ __ __"/>
+              <label className="block text-[16px] mb-[8px] text-[#1F1D14]">
+                Ваш номер
+              </label>
+              <input
+                className="w-[414px] ring-1 ring-black outline-none mb-[16px] h-[60px] py-[18px] pl-[25px] bg-[#F2F2F2] rounded-[5px]"
+                type="number"
+                placeholder="+998 __ ___ __ __"
+              />
 
-                <label className="block text-[16px] mb-[8px] text-[#1F1D14]">Адрес доставки</label>
-                <input className="w-[414px] ring-1 ring-black outline-none mb-[16px] h-[60px] py-[18px] pl-[25px] bg-[#F2F2F2] rounded-[5px]" type="text" placeholder="Область/город/улица/дом"/>
+              <label className="block text-[16px] mb-[8px] text-[#1F1D14]">
+                Адрес доставки
+              </label>
+              <input
+                className="w-[414px] ring-1 ring-black outline-none mb-[16px] h-[60px] py-[18px] pl-[25px] bg-[#F2F2F2] rounded-[5px]"
+                type="text"
+                placeholder="Область/город/улица/дом"
+              />
             </form>
-            <h3 className="text-[20px] font-medium text-[#1F1D14] mb-[24px] mt-[40px]">Тип оплаты</h3>
+            <h3 className="text-[20px] font-medium text-[#1F1D14] mb-[24px] mt-[40px]">
+              Тип оплаты
+            </h3>
             <div className=" flex flex-wrap gap-3">
-                <div className=" px-[25px] py-[17px] bg-[#F2F2F2] rounded-[8px] w-[130px]"><Image src={Click} alt="img" /></div>
-                <div className=" px-[25px] py-[17px] bg-[#F2F2F2] rounded-[8px] w-[130px]"><Image src={Payme} alt="img" /></div>
-                <div className=" px-[25px] py-[17px] bg-[#F2F2F2] rounded-[8px] w-[130px]"><p className="text-[14px] text-[#1F1D14] font-medium">Через карту</p></div>
-                <div className=" px-[25px] py-[17px] bg-[#F2F2F2] rounded-[8px] w-[130px]"><p className="text-[16px] text-center text-[#1F1D14] font-medium">Банковский счёт</p></div>
+              <div className=" px-[25px] py-[17px] bg-[#F2F2F2] rounded-[8px] w-[130px]">
+                <Image src={Click} alt="img" />
+              </div>
+              <div className=" px-[25px] py-[17px] bg-[#F2F2F2] rounded-[8px] w-[130px]">
+                <Image src={Payme} alt="img" />
+              </div>
+              <div className=" px-[25px] py-[17px] bg-[#F2F2F2] rounded-[8px] w-[130px]">
+                <p className="text-[14px] text-[#1F1D14] font-medium">
+                  Через карту
+                </p>
+              </div>
+              <div className=" px-[25px] py-[17px] bg-[#F2F2F2] rounded-[8px] w-[130px]">
+                <p className="text-[16px] text-center text-[#1F1D14] font-medium">
+                  Банковский счёт
+                </p>
+              </div>
             </div>
-            <button className="bg-[#FBD029] hover:bg-[#ddbc38] duration-150 rounded-[5px] w-full mt-[42px] py-[15px] px-[30px] text-[24px] font-medium text-[#1F1D14]">Купить</button>
+            <button className="bg-[#FBD029] hover:bg-[#ddbc38] duration-150 rounded-[5px] w-full mt-[42px] py-[15px] px-[30px] text-[24px] font-medium text-[#1F1D14]">
+              Купить
+            </button>
           </div>
         </div>
       </Container>

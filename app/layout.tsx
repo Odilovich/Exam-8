@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fira_Sans } from "next/font/google";
 import "./globals.css";
+import { ToastContainer } from "react-toastify";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={fira_sans.className}>
+        <ToastContainer />
         <header>
           <Header />
         </header>

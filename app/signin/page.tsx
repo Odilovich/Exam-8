@@ -23,6 +23,7 @@ const index = () => {
       if (response.status === 200) {
         router.push("/");
         setDataToCookie("access_token",response.data.access_token);
+        setDataToCookie("user_id", response.data.id )
         Notification({
           title: "Successfully login",
           type: "success",
