@@ -13,12 +13,18 @@ import RemoveShoppingCartOutlinedIcon from "@mui/icons-material/RemoveShoppingCa
 import { getDataFromCookie } from "@/utils/data-service";
 import Notification from "@/utils/notification";
 import { Avatar, Button } from "@mui/material";
+import TextArea from "antd/es/input/TextArea";
+import { ConfigProvider } from "antd";
+import { LoadingOutlined, SendOutlined } from "@ant-design/icons";
 const Index = () => {
   const [data, setData]: any = useState([]);
   const [cart, setCart] = useState(false);
   const [comments, setComments]: any = useState();
   const [productImages, setProductImages] = useState([]);
-  const { getProduct, cartProduct, getCommentsProduct } = ProductStore();
+  const [loadingSent, setLoadingSent] = useState(false);
+  const [handleComment, setHandleComment] = useState("");
+  const { getProduct, cartProduct, getCommentsProduct, commentProduct } =
+    ProductStore();
   const { id } = useParams();
   const token = getDataFromCookie("access_token");
   const [params, setParams] = useState({
@@ -78,6 +84,31 @@ const Index = () => {
 
   const otherComments = () => {
     setParams((prevParams) => ({ ...prevParams, limit: 1000 }));
+  };
+
+  const closeComments = () => {
+    setParams((prevParams) => ({ ...prevParams, limit: 3 }));
+  };
+
+  const createComment = async () => {
+    const payload = {
+      message: handleComment,
+      productID: id,
+    };
+    if (handleComment.length > 0) {
+      setLoadingSent(true);
+      try {
+        const res: any = await commentProduct(payload);
+        if (res.status === 201) {
+          getComments();
+          setHandleComment("");
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoadingSent(false);
+      }
+    }
   };
   return (
     <section className="pt-[16px] pb-[80px] bg-[#F2F2F2]">
@@ -205,6 +236,68 @@ const Index = () => {
             <p className="text-[32px] font-medium mb-[30px]">Отзыви</p>
             <div className="py-[40px] px-[70px] bg-white rounded-lg min-h-[470px]">
               <div className="flex flex-col gap-y-10 mb-10">
+                <ConfigProvider
+                  theme={{
+                    components: {
+                      Input: {
+                        activeBorderColor: "#000",
+                        hoverBorderColor: "#000",
+                        activeShadow: "#000",
+                      },
+                    },
+                  }}
+                >
+                  <div className="w-full relative border rounded-md">
+                    {loadingSent ? (
+                      <LoadingOutlined
+                        style={{
+                          fontSize: 22,
+                          position: "absolute",
+                          right: 15,
+                          top: 16,
+                          zIndex: 10,
+                          cursor: "no-drop",
+                        }}
+                      />
+                    ) : (
+                      <SendOutlined
+                        onClick={createComment}
+                        style={
+                          handleComment.length > 0
+                            ? {
+                                fontSize: 22,
+                                position: "absolute",
+                                right: 10,
+                                top: 16,
+                                zIndex: 10,
+                                cursor: "pointer",
+                              }
+                            : {
+                                fontSize: 22,
+                                position: "absolute",
+                                right: 10,
+                                top: 16,
+                                zIndex: 10,
+                                cursor: "no-drop",
+                              }
+                        }
+                      />
+                    )}
+                    <TextArea
+                      onChange={(e) => setHandleComment(e.target.value)}
+                      style={{
+                        border: "none",
+                        resize: "none",
+                        paddingRight: 40,
+                        fontSize: "16px",
+                      }}
+                      placeholder="Write comment"
+                      showCount
+                      maxLength={150}
+                      value={handleComment}
+                    />
+                  </div>
+                </ConfigProvider>
                 {comments?.Comment.length > 0 ? (
                   comments?.Comment.map((comment: any) => (
                     <div className="flex gap-3">
@@ -231,15 +324,27 @@ const Index = () => {
                 )}
               </div>
               {comments?.Comment.length > 0 ? (
-                <div className="flex justify-center">
-                  <Button
-                    onClick={otherComments}
-                    color="inherit"
-                    variant="outlined"
-                  >
-                    Все отзыви
-                  </Button>
-                </div>
+                params.limit > 3 ? (
+                  <div className="flex justify-center">
+                    <Button
+                      onClick={closeComments}
+                      color="inherit"
+                      variant="outlined"
+                    >
+                      Закрывать
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex justify-center">
+                    <Button
+                      onClick={otherComments}
+                      color="inherit"
+                      variant="outlined"
+                    >
+                      Все отзыви
+                    </Button>
+                  </div>
+                )
               ) : (
                 ""
               )}

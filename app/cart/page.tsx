@@ -1,6 +1,5 @@
 "use client";
 import Container from "@/components/container";
-import Bag from "@/assets/images/big-bag.png";
 import HomeIcon from "@/assets/icons/u_home-alt.svg";
 import NextMini from "@/assets/icons/right-mini.svg";
 import Image from "next/image";
@@ -42,7 +41,7 @@ const index = () => {
                 cart?.map((item: any, index: number) => (
                   <Cart
                     key={index}
-                    image={Bag}
+                    image={item.image_url[0]}
                     title={item.product_name}
                     price={item.cost}
                     id={item.product_id}
@@ -125,7 +124,7 @@ const index = () => {
               <div className=" px-[25px] py-[17px] bg-[#F2F2F2] rounded-[8px] w-[130px]">
                 <Image src={Payme} alt="img" />
               </div>
-              <div className=" px-[25px] py-[17px] bg-[#F2F2F2] rounded-[8px] w-[130px]">
+              <div className="flex items-center px-[25px] py-[17px] bg-[#F2F2F2] rounded-[8px] w-[130px]">
                 <p className="text-[14px] text-[#1F1D14] font-medium">
                   Через карту
                 </p>

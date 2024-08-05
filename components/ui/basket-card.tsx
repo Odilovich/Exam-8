@@ -1,7 +1,6 @@
 import ProductStore from "@/store/products"
 import Image from "next/image";
 import Delete from "@/assets/icons/trash.svg"
-import { useState } from "react";
 import { getDataFromCookie } from "@/utils/data-service";
 const index = (props: any) => {
   const { cartProduct, getCartProducts } = ProductStore();
@@ -23,7 +22,7 @@ const index = (props: any) => {
       className={`w-[655px] h-[150px] bg-[#F2F2F2] px-[10px] py-[15px] rounded-[8px] flex items-start justify-between`}
     >
       <div>
-        <Image className="h-[120px] w-auto" src={props.image} alt="image" />
+        <img className="h-[120px] w-[140px]" src={props.image} alt="image" />
       </div>
       <div>
         <p className="text-[20px] mb-[25px] w-[292px]">{props.title}</p>
