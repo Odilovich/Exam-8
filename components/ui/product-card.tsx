@@ -55,7 +55,7 @@ const Index = ({ image, title, price, content, id, isActive, isLiked, setLike }:
     } else {
       Notification({
         type: "error",
-        title: "Вы должны войти, чтобы добавить товар в корзину",
+        title: "Вы должны войти, чтобы добавить товар в like",
       })
     }
   }
@@ -72,9 +72,9 @@ const Index = ({ image, title, price, content, id, isActive, isLiked, setLike }:
     <div className="w-[292px] h-[416px] bg-white rounded-[5px] pt-[25px] relative overflow-hidden cursor-pointer">
       <div onClick={handleLike} className="absolute top-[10px] right-[14px] cursor-pointer w-[25px]">
         {liked === false ? (
-          <FavoriteBorderOutlinedIcon/>
+          <FavoriteBorderOutlinedIcon className="text-red-600"/>
         ) : (
-          <FavoriteIcon/>
+          <FavoriteIcon className="text-red-600"/>
         )
       }
       </div>
