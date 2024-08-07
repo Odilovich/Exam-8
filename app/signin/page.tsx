@@ -46,8 +46,8 @@ const Index = () => {
   };
   return (
     <>
-      <div className="h-screen flex-col flex items-center justify-center gap-8 p-5">
-        <h1 className="text-[35px] font-bold sm:text-[40px] md:text-[50px]">
+      <div className=" flex-col flex items-center justify-center gap-3 p-5 mb-4">
+        <h1 className="text-[30px] font-bold sm:text-[35px] md:text-[40px]">
           Login
         </h1>
         <div className="max-w-[600px]">
@@ -59,6 +59,7 @@ const Index = () => {
             {({ isSubmitting }) => (
               <Form>
                 <Field
+                  size="small"
                   name="email"
                   type="email"
                   as={TextField}
@@ -75,6 +76,7 @@ const Index = () => {
                   }
                 />
                 <Field
+                  size="small"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   as={TextField}
@@ -103,16 +105,17 @@ const Index = () => {
                   }}
                 />
                 <Button
+                  size="small"
                   type="submit"
                   variant="contained"
-                  color="primary"
                   fullWidth
                   disabled={isSubmitting}
-                  className="mt-5"
+                  sx={{marginTop:"15px", backgroundColor:"#FBD029", marginBottom:"10px"}}
+                  className="hover:bg-[#FBb005] mb-[10px]"
                 >
                   {isSubmitting ? "Submitting" : "Login"}
                 </Button>
-                <p onClick={()=>router.push("/signup")} className="mt-3 cursor-pointer text-[20px] hover:text-blue-500">Signup</p>
+                <span onClick={()=>router.push("/signup")} className=" cursor-pointer text-[20px] hover:text-[#FBb005]">Signup</span>
               </Form>
             )}
           </Formik>

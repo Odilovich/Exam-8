@@ -10,11 +10,12 @@ import { useEffect, useState } from "react";
 import { getDataFromCookie } from "@/utils/data-service";
 import Notification from "@/utils/notification";
 
-const Index = ({ image, title, price, content, id, isActive, isLiked }: any) => {
-  const { cartProduct, likeProduct } = ProductStore();
+const Index = ({ image, title, price, content, id, isActive, isLiked, setLike }: any) => {
+  const { cartProduct, likeProduct, getLikedProducts, getCartProducts } = ProductStore();
   const [cart, setCart] = useState(false);
   const [liked, setLiked] = useState(false);
   const token = getDataFromCookie("access_token");
+  const userId = getDataFromCookie("user_id");
   
   const handleCart = async () => {
     if (token) {
@@ -24,6 +25,7 @@ const Index = ({ image, title, price, content, id, isActive, isLiked }: any) => 
       };
       try {
         await cartProduct(payload);
+        getCartProducts(userId)
       } catch (err) {
         console.log(err);
       }
@@ -42,8 +44,13 @@ const Index = ({ image, title, price, content, id, isActive, isLiked }: any) => 
 
   const handleLike = async () => {
     if (token) {
-      setLiked(!liked);
+      setLike ? (
+        setLiked(liked)
+      ) : (
+        setLiked(!liked)
+      )
       const res = await likeProduct(id)
+      getLikedProducts()
       console.log(res);
     } else {
       Notification({
@@ -57,6 +64,10 @@ const Index = ({ image, title, price, content, id, isActive, isLiked }: any) => 
   //     setLiked(true);
   //   }
   // } ,[setLiked])
+
+  useEffect(() => {
+    setLiked(setLike? true : false);
+  }, [])
   return (
     <div className="w-[292px] h-[416px] bg-white rounded-[5px] pt-[25px] relative overflow-hidden cursor-pointer">
       <div onClick={handleLike} className="absolute top-[10px] right-[14px] cursor-pointer w-[25px]">

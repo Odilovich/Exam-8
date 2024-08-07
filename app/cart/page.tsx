@@ -38,9 +38,9 @@ const Index = () => {
             </div>
             <div className=" flex flex-col gap-[10px]">
               {cart?.length > 0 ? (
-                cart?.map((item: any, Index: number) => (
+                cart?.map((item: any, index: number) => (
                   <Cart
-                    key={Index}
+                    key={index}
                     image={item.image_url[0]}
                     title={item.product_name}
                     price={item.cost}

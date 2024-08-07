@@ -17,7 +17,9 @@ export interface Request {
 
 export interface ProductStore {
     cart:any[],
-    totalCount:number
+    liked:any[],
+    totalCount:number,
+    likeCount:number
     getProducts: (data: data) => void
     getProduct: (id:any) => any
     likeProduct: (id:string) => void

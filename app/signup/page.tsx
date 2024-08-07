@@ -44,8 +44,8 @@ const Index = () => {
   return (
     <>
     <Signup open={modal} handleClose={()=> setModal(false)} email={email}/>
-      <div className="h-screen flex-col flex items-center justify-center gap-8 p-5">
-        <h1 className="text-[35px] font-bold sm:text-[40px] md:text-[50px]">
+      <div className="flex-col flex items-center justify-center gap-[10px] p-5">
+        <h1 className="text-[30px] font-bold sm:text-[35px] md:text-[40px]">
           Sign up
         </h1>
         <div className="max-w-[600px]">
@@ -57,6 +57,7 @@ const Index = () => {
             {({ isSubmitting }) => (
               <Form>
                 <Field
+                  size="small"
                   name="first_name"
                   type="text"
                   as={TextField}
@@ -69,6 +70,7 @@ const Index = () => {
                   }
                 />
                 <Field
+                  size="small"
                   name="last_name"
                   type="text"
                   as={TextField}
@@ -81,6 +83,7 @@ const Index = () => {
                   }
                 />
                 <Field
+                  size="small"
                   name="email"
                   type="email"
                   as={TextField}
@@ -93,6 +96,7 @@ const Index = () => {
                   }
                 />
                 <Field
+                  size="small"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   as={TextField}
@@ -114,6 +118,7 @@ const Index = () => {
                   }}
                 />
                 <Field
+                  size="small"
                     as={RadioGroup}
                     aria-label="for_gender"
                     name="gender"
@@ -126,12 +131,12 @@ const Index = () => {
                     <div className="flex items-center justify-between">
                       <FormControlLabel
                         value="male"
-                        control={<Radio />}
+                        control={<Radio size="small"/>}
                         label="Male"
                       />
                       <FormControlLabel
                         value="female"
-                        control={<Radio />}
+                        control={<Radio size="small" />}
                         label="Female"
                       />
                     </div>
@@ -142,16 +147,17 @@ const Index = () => {
                     />
                   </Field>
                 <Button
+                  size="small"
                   type="submit"
                   variant="contained"
-                  color="primary"
                   fullWidth
                   disabled={isSubmitting}
-                  className="mt-5"
+                  sx={{marginTop:"6px", backgroundColor:"#FBD029", marginBottom:"10px"}}
+                  className="hover:bg-[#FBb005] mb-[10px]"
                 >
                   {isSubmitting ? "Yuborilmoqda..." : "Ro'yhatdan o'tish"}
                 </Button>
-                <p onClick={()=>router.push("/signin")} className="mt-3 cursor-pointer text-[20px] hover:text-blue-500">Sign in</p>
+                <span onClick={()=>router.push("/signin")} className=" cursor-pointer text-[20px] hover:text-[#FBb005]">Sign in</span>
               </Form>
             )}
           </Formik>

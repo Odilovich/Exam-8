@@ -3,7 +3,9 @@ import { ProductStore } from "@/interface/products";
 import Products from "@/service/products";
 const useProductStore = create<ProductStore>((set) => ({
   cart: [],
-  totalCount: 3,
+  liked: [],
+  totalCount: 0,
+  likeCount: 0,
   getProducts: async (params) => {
     try {
       const response = await Products.get_products(params);
@@ -31,6 +33,8 @@ const useProductStore = create<ProductStore>((set) => ({
   getLikedProducts: async () => {
     try {
       const response = await Products.get_liked_products();
+      set({ liked: response?.data?.products });
+      set({ likeCount: response?.data?.total_count });
       return response;
     } catch (error) {
       console.error(error);
@@ -48,9 +52,13 @@ const useProductStore = create<ProductStore>((set) => ({
     try {
       const response = await Products.get_cart_products(data);
       set({ cart: response.data });
+      set({ totalCount: response.data.length });
+      console.log(response);
+      
       return response;
     } catch (error) {
       console.error(error);
+      set({ totalCount: 0 });
     }
   },
   getCommentsProduct: async (params) => {

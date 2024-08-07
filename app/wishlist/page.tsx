@@ -4,18 +4,13 @@ import  Container  from "@/components/container";
 import useProductStore from "@/store/products";
 import { useEffect, useState } from "react";
 const Index = () => {
-  const {getLikedProducts} = useProductStore()
-  const [data, setData] = useState([])
-  const [liked, setLiked]:any = useState([])
+  const {getLikedProducts, liked} = useProductStore()
   const getLiked = async () => {
-    const response:any = await getLikedProducts()
-    console.log(response);
-    setLiked(response.data.products.map((item:any) => item.product_id))
-    setData(response.data.products)
+    await getLikedProducts()
   }
   useEffect(()=> {
     getLiked()
-  }, [liked])
+  }, [])
   return (
     <>
       <section className="pt-[50px] pb-[60px]">
@@ -23,8 +18,8 @@ const Index = () => {
           <p className="text-[35px] font-semibold mb-5">Liked products</p>
           <div className="grid gap-x-3 justify-center grid-cols-1 sm:grid-cols-2  md:grid-cols-3 gap-y-10 lg:grid-cols-4">
           {
-            data?.map((item, Index) => {
-              return <Card liked={liked} key={Index} data={item} />;
+            liked?.map((item:any, index) => {
+              return <Card key={index} title={item.product_name} image={item.image_url[0]} id={item.product_id} price={item.cost} isActive={item.basket} setLike={true} />;
             })
           }
           </div>

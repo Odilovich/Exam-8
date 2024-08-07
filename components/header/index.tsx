@@ -17,7 +17,7 @@ import CartIcon from "@/assets/icons/u_shopping-cart-alt.svg";
 import { Badge } from "@mui/material";
 const Index = () => {
   const router = useRouter();
-  const { totalCount } = ProductStore();
+  const { totalCount, likeCount } = ProductStore();
   const handleClick = () => {
     router.push("/");
   };
@@ -29,7 +29,6 @@ const Index = () => {
     { title: "Новости", path: "/news" },
     { title: "О нас", path: "/abouts" },
   ];
-  console.log(totalCount);
 
   return (
     <header className="bg-[#000]">
@@ -108,9 +107,21 @@ const Index = () => {
                   >
                     <Image src={UserIcon} alt="user icon" />
                   </button>
-                  <button className="w-[45px] h-[45px] bg-[#F2F2F2] rounded-[3px] flex items-center justify-center cursor-pointer">
-                    <Image src={HeartIcon} alt="heart icon" />
-                  </button>
+                  <Badge
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    badgeContent={likeCount}
+                    color="warning"
+                  >
+                    <button
+                      onClick={() => router.push("/wishlist")}
+                      className="w-[45px] h-[45px] bg-[#F2F2F2] rounded-[3px] flex items-center justify-center cursor-pointer"
+                    >
+                      <Image src={HeartIcon} alt="heart icon" />
+                    </button>
+                  </Badge>
                 </div>
                 <Badge
                   anchorOrigin={{
